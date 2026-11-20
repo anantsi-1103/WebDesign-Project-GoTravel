@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GoTravel | All-in-One Travel Booking Portal</title>
+    <meta name="description"
+        content="Explore flights, hotels, buses, and holiday packages with real-time price calculation, filtering, and instant booking management." />
+
+</head>
+
+<body>
+
+    <!-- ========================================================================= -->
+    <!-- NAVIGATION BAR (MODULE 1: HOMEPAGE) -->
+    <!-- ========================================================================= -->
+    <header class="navbar-header" id="main-header">
+        <div class="nav-container">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-logo" aria-label="WanderGo Travel Home">
+                <span class="logo-icon">✈️</span>
+                <span class="logo-text">Go<strong>Travel</strong></span>
+            </a>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button class="mobile-toggle-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu"
+                aria-expanded="false">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu" id="nav-links-list" aria-label="Primary Navigation">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#flights" class="nav-link active" data-nav-tab="flights">
+                            <span class="nav-icon">✈️</span> Flights
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#hotels" class="nav-link" data-nav-tab="hotels">
+                            <span class="nav-icon">🏨</span> Hotels
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#buses" class="nav-link" data-nav-tab="buses">
+                            <span class="nav-icon">🚌</span> Buses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#packages" class="nav-link" data-nav-tab="packages">
+                            <span class="nav-icon">🌴</span> Holidays
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Right Action Items: My Bookings & Auth -->
+                <div class="nav-actions">
+                    <!-- My Bookings Button with Badge -->
+                    <button class="btn btn-nav-action" id="nav-my-bookings-btn" aria-label="View My Bookings">
+                        <span class="btn-icon">🧳</span>
+                        <span class="btn-label">My Bookings</span>
+                        <span class="badge-count" id="nav-bookings-count">0</span>
+                    </button>
+
+                    <!-- Login / Register Button -->
+                    <button class="btn btn-primary btn-sm" id="nav-auth-btn">
+                        Sign In / Register
+                    </button>
+
+                    <!-- Logged In User Profile Pill (Hidden by default) -->
+                    <div class="user-profile-pill hidden" id="nav-user-profile">
+                        <span class="user-avatar">👤</span>
+                        <span class="user-name" id="nav-user-name">Siri</span>
+                        <button class="btn-logout" id="nav-logout-btn" title="Logout">Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <main id="main-content">
+
+        <!-- HERO SECTION WITH TABS AND SEARCH FORM -->
+        <section class="hero-section" id="hero-search-container">
+            <div class="hero-overlay"></div>
+            <div class="hero-content-wrapper">
+                <div class="hero-headline">
+                    <span class="hero-tagline">✨ Smarter Way To Travel & Learn</span>
+                    <h1 class="hero-title">Discover the World with GoTravel</h1>
+                    <p class="hero-subtitle">
+                        Compare cheap flights, luxury hotels, express buses, and dream holiday packages with instant
+                        booking.
+                    </p>
+                </div>
+
+                <!-- SEARCH WIDGET CARD -->
+                <div class="search-widget-card" role="region" aria-label="Travel Search Form">
+                    <!-- TAB HEADERS (Module 1: Flight, Hotel, Bus, Package Tabs) -->
+                    <div class="portal-tabs-nav" role="tablist" aria-label="Booking Categories">
+                        <button class="portal-tab-btn active" role="tab" aria-selected="true" data-tab="flights"
+                            id="tab-btn-flights">
+                            <span class="tab-icon">✈️</span> Flights
+                        </button>
+                        <button class="portal-tab-btn" role="tab" aria-selected="false" data-tab="hotels"
+                            id="tab-btn-hotels">
+                            <span class="tab-icon">🏨</span> Hotels
+                        </button>
+                        <button class="portal-tab-btn" role="tab" aria-selected="false" data-tab="buses"
+                            id="tab-btn-buses">
+                            <span class="tab-icon">🚌</span> Buses
+                        </button>
+                        <button class="portal-tab-btn" role="tab" aria-selected="false" data-tab="packages"
+                            id="tab-btn-packages">
+                            <span class="tab-icon">🌴</span> Holiday Packages
+                        </button>
+                    </div>
+
+                    <!-- TAB PANELS CONTENT -->
+                    <div class="tab-panels-wrapper">
+
+                        <!-- 1. FLIGHT SEARCH PANEL -->
+                        <div class="tab-search-panel active" id="tab-panel-flights" role="tabpanel"
+                            aria-labelledby="tab-btn-flights">
+                            <form id="flight-search-form" class="search-form-grid flight-form">
+
+                                <!-- Origin (Source) -->
+                                <div class="form-group route-input-group">
+                                    <label for="flight-origin">
+                                        <span class="label-icon">🛫</span> From (Origin)
+                                    </label>
+                                    <select id="flight-origin" class="form-control" required
+                                        aria-label="Departure Airport">
+                                        <option value="DEL" selected>Delhi (DEL) - India</option>
+                                        <option value="BOM">Mumbai (BOM) - India</option>
+                                        <option value="NYC">New York (JFK) - USA</option>
+                                        <option value="LON">London (LHR) - UK</option>
+                                        <option value="DXB">Dubai (DXB) - UAE</option>
+                                        <option value="PAR">Paris (CDG) - France</option>
+                                        <option value="TYO">Tokyo (HND) - Japan</option>
+                                        <option value="SIN">Singapore (SIN) - Singapore</option>
+                                    </select>
+                                </div>
+
+                                <!-- Swap Button -->
+                                <div class="swap-btn-container">
+                                    <button type="button" class="btn-swap-airports" id="swap-flight-airports"
+                                        title="Swap Origin and Destination" aria-label="Swap Cities">
+                                        ⇄
+                                    </button>
+                                </div>
+
+                                <!-- Destination -->
+                                <div class="form-group route-input-group">
+                                    <label for="flight-destination">
+                                        <span class="label-icon">🛬</span> To (Destination)
+                                    </label>
+                                    <select id="flight-destination" class="form-control" required
+                                        aria-label="Arrival Airport">
+                                        <option value="DEL">Delhi (DEL) - India</option>
+                                        <option value="BOM" selected>Mumbai (BOM) - India</option>
+                                        <option value="NYC">New York (JFK) - USA</option>
+                                        <option value="LON">London (LHR) - UK</option>
+                                        <option value="DXB">Dubai (DXB) - UAE</option>
+                                        <option value="PAR">Paris (CDG) - France</option>
+                                        <option value="TYO">Tokyo (HND) - Japan</option>
+                                        <option value="SIN">Singapore (SIN) - Singapore</option>
+                                    </select>
+                                </div>
+
+                                <!-- Departure Date -->
+                                <div class="form-group">
+                                    <label for="flight-departure-date">
+                                        <span class="label-icon">📅</span> Departure Date
+                                    </label>
+                                    <input type="date" id="flight-departure-date" class="form-control" required />
+                                </div>
+
+                                <!-- Passengers Count -->
+                                <div class="form-group">
+                                    <label for="flight-passengers">
+                                        <span class="label-icon">👥</span> Travelers
+                                    </label>
+                                    <select id="flight-passengers" class="form-control">
+                                        <option value="1">1 Passenger</option>
+                                        <option value="2">2 Passengers</option>
+                                        <option value="3">3 Passengers</option>
+                                        <option value="4">4 Passengers</option>
+                                        <option value="5">5 Passengers</option>
+                                    </select>
+                                </div>
+
+                                <!-- Travel Class -->
+                                <div class="form-group">
+                                    <label for="flight-class">
+                                        <span class="label-icon">💺</span> Class
+                                    </label>
+                                    <select id="flight-class" class="form-control">
+                                        <option value="Economy">Economy</option>
+                                        <option value="Premium Economy">Premium Economy</option>
+                                        <option value="Business">Business</option>
+                                    </select>
+                                </div>
+
+                                <!-- Search Action Button -->
+                                <div class="form-action-group">
+                                    <button type="submit" class="btn btn-accent btn-search-wide"
+                                        id="btn-search-flights">
+                                        <span class="btn-icon">🔍</span> Search Flights
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <!-- 2. HOTEL SEARCH PANEL -->
+                        <div class="tab-search-panel" id="tab-panel-hotels" role="tabpanel"
+                            aria-labelledby="tab-btn-hotels">
+                            <form id="hotel-search-form" class="search-form-grid hotel-form">
+
+                                <!-- City / Destination -->
+                                <div class="form-group city-input-group">
+                                    <label for="hotel-city">
+                                        <span class="label-icon">📍</span> Destination City
+                                    </label>
+                                    <select id="hotel-city" class="form-control" required>
+                                        <option value="All Cities">All Cities</option>
+                                        <option value="Paris" selected>Paris</option>
+                                        <option value="New York">New York</option>
+                                        <option value="Dubai">Dubai</option>
+                                        <option value="Tokyo">Tokyo</option>
+                                        <option value="London">London</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                    </select>
+                                </div>
+
+                                <!-- Check-in Date -->
+                                <div class="form-group">
+                                    <label for="hotel-checkin">
+                                        <span class="label-icon">📅</span> Check-in
+                                    </label>
+                                    <input type="date" id="hotel-checkin" class="form-control" required />
+                                </div>
+
+                                <!-- Check-out Date -->
+                                <div class="form-group">
+                                    <label for="hotel-checkout">
+                                        <span class="label-icon">📅</span> Check-out
+                                        <span class="nights-pill" id="hotel-nights-badge">1 night</span>
+                                    </label>
+                                    <input type="date" id="hotel-checkout" class="form-control" required />
+                                </div>
+
+                                <!-- Rooms -->
+                                <div class="form-group">
+                                    <label for="hotel-rooms">
+                                        <span class="label-icon">🚪</span> Rooms
+                                    </label>
+                                    <select id="hotel-rooms" class="form-control">
+                                        <option value="1">1 Room</option>
+                                        <option value="2">2 Rooms</option>
+                                        <option value="3">3 Rooms</option>
+                                        <option value="4">4 Rooms</option>
+                                    </select>
+                                </div>
+
+                                <!-- Guests -->
+                                <div class="form-group">
+                                    <label for="hotel-guests">
+                                        <span class="label-icon">👥</span> Guests
+                                    </label>
+                                    <select id="hotel-guests" class="form-control">
+                                        <option value="1">1 Guest</option>
+                                        <option value="2" selected>2 Guests</option>
+                                        <option value="3">3 Guests</option>
+                                        <option value="4">4 Guests</option>
+                                    </select>
+                                </div>
+
+                                <!-- Search Button -->
+                                <div class="form-action-group">
+                                    <button type="submit" class="btn btn-accent btn-search-wide" id="btn-search-hotels">
+                                        <span class="btn-icon">🔍</span> Search Hotels
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <!-- 3. BUS SEARCH PANEL -->
+                        <div class="tab-search-panel" id="tab-panel-buses" role="tabpanel"
+                            aria-labelledby="tab-btn-buses">
+                            <form id="bus-search-form" class="search-form-grid bus-form">
+
+                                <div class="form-group">
+                                    <label for="bus-from"><span class="label-icon">📍</span> From City</label>
+                                    <input type="text" id="bus-from" class="form-control"
+                                        placeholder="e.g. Delhi or Mumbai" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bus-to"><span class="label-icon">📍</span> To City</label>
+                                    <input type="text" id="bus-to" class="form-control"
+                                        placeholder="e.g. Jaipur or Goa" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bus-departure-date"><span class="label-icon">📅</span> Travel
+                                        Date</label>
+                                    <input type="date" id="bus-departure-date" class="form-control" />
+                                </div>
+
+                                <div class="form-action-group">
+                                    <button type="submit" class="btn btn-accent btn-search-wide">
+                                        <span class="btn-icon">🔍</span> Search Buses
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <!-- 4. HOLIDAY PACKAGES SEARCH PANEL -->
+                        <div class="tab-search-panel" id="tab-panel-packages" role="tabpanel"
+                            aria-labelledby="tab-btn-packages">
+                            <form id="package-search-form" class="search-form-grid package-form">
+
+                                <div class="form-group">
+                                    <label for="package-dest"><span class="label-icon">🌍</span> Destination</label>
+                                    <input type="text" id="package-dest" class="form-control"
+                                        placeholder="e.g. Paris, Dubai, Tokyo, Goa" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="package-cat"><span class="label-icon">🏷️</span> Category</label>
+                                    <select id="package-cat" class="form-control">
+                                        <option value="all">All Packages</option>
+                                        <option value="Romance">Romantic Honeymoon</option>
+                                        <option value="Adventure">Adventure & Luxury</option>
+                                        <option value="Culture">Culture & Heritage</option>
+                                        <option value="Beach">Beach & Leisure</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-action-group">
+                                    <button type="submit" class="btn btn-accent btn-search-wide">
+                                        <span class="btn-icon">🔍</span> Find Packages
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRUST & BENEFIT HIGHLIGHTS STRIP -->
+        <section class="trust-highlights-bar" aria-label="Key Benefits">
+            <div class="container highlights-grid">
+                <div class="highlight-item">
+                    <span class="h-icon">🛡️</span>
+                    <div>
+                        <h4>100% Secure Bookings</h4>
+                        <p>Encrypted data & safe local session storage</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <span class="h-icon">⚡</span>
+                    <div>
+                        <h4>Instant Confirmation</h4>
+                        <p>Immediate reference ID & printable e-ticket</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <span class="h-icon">💰</span>
+                    <div>
+                        <h4>Best Price Guarantee</h4>
+                        <p>Compare cheapest & fastest routes effortlessly</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="module-view-section active" id="section-view-flights" aria-label="Flight Search Results">
+            <div class="container section-inner">
+
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Available Flights</h2>
+                        <p class="view-subtitle" id="flight-route-header">DEL ➔ BOM</p>
+                    </div>
+                    <div class="sort-control-wrap">
+                        <label for="flight-sort-select">Sort by:</label>
+                        <select id="flight-sort-select" class="form-control form-control-sm">
+                            <option value="cheapest">Cheapest First</option>
+                            <option value="fastest">Fastest Duration</option>
+                            <option value="earliest">Earliest Departure</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-layout-grid">
+
+                    <!-- LEFT SIDEBAR: FILTERS -->
+                    <aside class="filters-sidebar" aria-label="Flight Filters">
+                        <div class="filter-card">
+                            <div class="filter-header">
+                                <h3>Filters</h3>
+                                <button type="button" class="btn-link-reset" id="flight-reset-filters">Reset
+                                    All</button>
+                            </div>
+
+                            <!-- Price Filter Slider -->
+                            <div class="filter-group">
+                                <div class="slider-label-row">
+                                    <label for="flight-price-range">Max Price</label>
+                                    <span class="filter-val-badge" id="flight-price-val">$600</span>
+                                </div>
+                                <input type="range" id="flight-price-range" class="custom-range" min="40" max="600"
+                                    step="10" value="600" aria-label="Filter flights by maximum price" />
+                                <div class="range-limits">
+                                    <span>$40</span>
+                                    <span>$600</span>
+                                </div>
+                            </div>
+
+                            <hr class="filter-divider" />
+
+                            <!-- Departure Time Filter -->
+                            <div class="filter-group">
+                                <h4>Departure Time</h4>
+                                <div class="radio-time-options">
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="flight-time-filter" value="all" checked />
+                                        <span>Anytime</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="flight-time-filter" value="morning" />
+                                        <span>🌅 Morning (06-12)</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="flight-time-filter" value="afternoon" />
+                                        <span>☀️ Afternoon (12-18)</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="flight-time-filter" value="evening" />
+                                        <span>🌙 Evening (18-24)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <hr class="filter-divider" />
+
+                            <!-- Stops Filter -->
+                            <div class="filter-group">
+                                <h4>Stops</h4>
+                                <div class="checkbox-options">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" name="flight-stops-filter" value="0" />
+                                        <span class="checkmark"></span>
+                                        <span>Non-stop only</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" name="flight-stops-filter" value="1" />
+                                        <span class="checkmark"></span>
+                                        <span>1 Stop</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </aside>
+
+                    <!-- MAIN RESULTS COLUMN -->
+                    <div class="results-main-col">
+                        <div class="results-meta-bar">
+                            <span id="flight-results-count" class="results-count-text">Loading flights...</span>
+                            <span class="results-badge-info">⚡ Live Fare Updates</span>
+                        </div>
+
+                        <!-- Dynamic Flight Cards List -->
+                        <div class="results-cards-list" id="flight-results-list" role="feed" aria-busy="false">
+                            <!-- Rendered via flight.js -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="module-view-section" id="section-view-hotels" aria-label="Hotel Search Results">
+            <div class="container section-inner">
+
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Available Hotels & Resorts</h2>
+                        <p class="view-subtitle">Select check-in & check-out dates to calculate total stay pricing</p>
+                    </div>
+                    <div class="sort-control-wrap">
+                        <label for="hotel-sort-select">Sort by:</label>
+                        <select id="hotel-sort-select" class="form-control form-control-sm">
+                            <option value="rating">Top Guest Rating</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-layout-grid">
+
+                    <!-- HOTEL FILTERS SIDEBAR -->
+                    <aside class="filters-sidebar" aria-label="Hotel Filters">
+                        <div class="filter-card">
+                            <div class="filter-header">
+                                <h3>Hotel Filters</h3>
+                                <button type="button" class="btn-link-reset" id="hotel-reset-filters">Reset</button>
+                            </div>
+
+                            <!-- Price Filter Slider -->
+                            <div class="filter-group">
+                                <div class="slider-label-row">
+                                    <label for="hotel-price-range">Max Nightly Rate</label>
+                                    <span class="filter-val-badge" id="hotel-price-val">$400</span>
+                                </div>
+                                <input type="range" id="hotel-price-range" class="custom-range" min="80" max="400"
+                                    step="10" value="400" aria-label="Filter hotels by maximum nightly price" />
+                                <div class="range-limits">
+                                    <span>$80</span>
+                                    <span>$400</span>
+                                </div>
+                            </div>
+
+                            <hr class="filter-divider" />
+
+                            <!-- Star Rating Filter -->
+                            <div class="filter-group">
+                                <h4>Star Category</h4>
+                                <div class="radio-time-options">
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="hotel-star-filter" value="all" checked />
+                                        <span>All Stars</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="hotel-star-filter" value="5" />
+                                        <span>★★★★★ 5 Stars Only</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="hotel-star-filter" value="4" />
+                                        <span>★★★★☆ 4 Stars & Up</span>
+                                    </label>
+                                    <label class="time-radio-pill">
+                                        <input type="radio" name="hotel-star-filter" value="3" />
+                                        <span>★★★☆☆ 3 Stars & Up</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </aside>
+
+                    <!-- HOTEL RESULTS COLUMN -->
+                    <div class="results-main-col">
+                        <div class="results-meta-bar">
+                            <span id="hotel-results-count" class="results-count-text">Loading hotels...</span>
+                            <span class="results-badge-info">🏨 Free Cancellation Available</span>
+                        </div>
+
+                        <!-- Dynamic Hotel Cards List -->
+                        <div class="results-cards-list" id="hotel-results-list" role="feed">
+                            <!-- Rendered via hotel.js -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======================================================================= -->
+        <!-- BUS SEARCH RESULTS VIEW -->
+        <!-- ======================================================================= -->
+        <section class="module-view-section" id="section-view-buses" aria-label="Bus Search Results">
+            <div class="container section-inner">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Available Intercity Express Buses</h2>
+                        <p class="view-subtitle">Comfortable AC Sleepers, Seaters, and Luxury Coaches</p>
+                    </div>
+                </div>
+
+                <div class="results-cards-list" id="bus-results-list">
+                    <!-- Rendered via bus-package.js -->
+                </div>
+            </div>
+        </section>
+
+     
+        <section class="module-view-section" id="section-view-packages" aria-label="Holiday Packages Results">
+            <div class="container section-inner">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Featured Holiday Packages</h2>
+                        <p class="view-subtitle">Curated flights, handpicked luxury stays, and guided city tours</p>
+                    </div>
+                </div>
+
+                <div class="package-cards-grid" id="package-results-list">
+                    <!-- Rendered via bus-package.js -->
+                </div>
+            </div>
+        </section>
+
+        <section class="destinations-section">
+            <div class="container">
+                <div class="section-heading text-center">
+                    <span class="section-tag">Explore Top Destinations</span>
+                    <h2>Trending Places for Your Next Journey</h2>
+                    <p>Handpicked destinations with special student & family discounts</p>
+                </div>
+
+                <div class="destinations-grid">
+                    <article class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&auto=format&fit=crop&q=80"
+                            alt="Paris, France" class="dest-img" loading="lazy" />
+                        <div class="dest-card-overlay">
+                            <span class="dest-badge">Europe</span>
+                            <h3>Paris, France</h3>
+                            <p>Flights from $75 • Hotels from $95/night</p>
+                        </div>
+                    </article>
+
+                    <article class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&auto=format&fit=crop&q=80"
+                            alt="Dubai, UAE" class="dest-img" loading="lazy" />
+                        <div class="dest-card-overlay">
+                            <span class="dest-badge">Middle East</span>
+                            <h3>Dubai, UAE</h3>
+                            <p>Flights from $140 • Hotels from $160/night</p>
+                        </div>
+                    </article>
+
+                    <article class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&auto=format&fit=crop&q=80"
+                            alt="Tokyo, Japan" class="dest-img" loading="lazy" />
+                        <div class="dest-card-overlay">
+                            <span class="dest-badge">Asia</span>
+                            <h3>Tokyo, Japan</h3>
+                            <p>Flights from $410 • Hotels from $145/night</p>
+                        </div>
+                    </article>
+
+                    <article class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&auto=format&fit=crop&q=80"
+                            alt="New York, USA" class="dest-img" loading="lazy" />
+                        <div class="dest-card-overlay">
+                            <span class="dest-badge">North America</span>
+                            <h3>New York, USA</h3>
+                            <p>Flights from $310 • Hotels from $120/night</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="modal-backdrop" id="booking-modal" role="dialog" aria-modal="true"
+        aria-labelledby="booking-modal-title">
+        <div class="modal-dialog modal-dialog-lg">
+            <div class="modal-header">
+                <h2 id="booking-modal-title">Complete Your Reservation</h2>
+                <button type="button" class="btn-close-modal" id="close-booking-modal"
+                    aria-label="Close dialog">&times;</button>
+            </div>
+
+            <div class="modal-body booking-modal-layout">
+
+                <!-- Left: Passenger Details Form -->
+                <div class="booking-form-col">
+                    <form id="booking-form" novalidate>
+
+                        <!-- Primary Contact Section -->
+                        <fieldset class="form-section-fieldset">
+                            <legend>Primary Contact Information</legend>
+                            <div class="form-grid">
+                                <div class="form-group col-span-2">
+                                    <label for="primary-contact-email">Email Address *</label>
+                                    <input type="email" id="primary-contact-email" class="form-control"
+                                        placeholder="name@example.com" required />
+                                    <span class="field-error-msg" id="primary-contact-email-err"></span>
+                                </div>
+
+                                <div class="form-group col-span-2">
+                                    <label for="primary-contact-phone">Mobile Phone (with country code) *</label>
+                                    <input type="tel" id="primary-contact-phone" class="form-control"
+                                        placeholder="+1 555-0199 or 9876543210" required />
+                                    <span class="field-error-msg" id="primary-contact-phone-err"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Dynamic Passenger / Guest Fields -->
+                        <div class="passengers-dynamic-section" id="dynamic-passenger-fields">
+                            <!-- Rendered dynamically by booking.js based on passengers count -->
+                        </div>
+
+                        <!-- Promo Code Input Group -->
+                        <div class="promo-box-container">
+                            <label for="promo-code-input">Have a Promo or Student Code?</label>
+                            <div class="promo-input-group">
+                                <input type="text" id="promo-code-input" class="form-control"
+                                    placeholder="Try: STUDENT10 or WANDERGO" />
+                                <button type="button" class="btn btn-secondary" id="btn-apply-promo">Apply</button>
+                            </div>
+                            <div id="promo-message" class="promo-msg"></div>
+                        </div>
+
+                        <!-- Terms & Consent -->
+                        <div class="form-group terms-checkbox-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="booking-terms-agree" required checked />
+                                <span class="checkmark"></span>
+                                <span>I confirm that all traveler details are accurate and agree to the Fare Rules &
+                                    Cancellation Policy.</span>
+                            </label>
+                        </div>
+
+                        <!-- Submit Confirmation Button -->
+                        <div class="modal-form-actions">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-confirm-booking">
+                                Confirm & Book Now
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Right: Real-time Booking Summary -->
+                <aside class="booking-summary-col">
+                    <div class="summary-card" id="booking-summary-content">
+                        <!-- Rendered dynamically via booking.js -->
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-backdrop" id="my-bookings-modal" role="dialog" aria-modal="true"
+        aria-labelledby="my-bookings-modal-title">
+        <div class="modal-dialog modal-dialog-md">
+            <div class="modal-header">
+                <h2 id="my-bookings-modal-title">My Bookings & Reservations</h2>
+                <button type="button" class="btn-close-modal" id="close-my-bookings-modal"
+                    aria-label="Close dialog">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Filter Tabs in My Bookings -->
+                <div class="my-bookings-filter-bar">
+                    <button class="booking-filter-tab active" data-filter="all">All</button>
+                    <button class="booking-filter-tab" data-filter="flight">✈️ Flights</button>
+                    <button class="booking-filter-tab" data-filter="hotel">🏨 Hotels</button>
+                    <button class="booking-filter-tab" data-filter="bus">🚌 Buses</button>
+                    <button class="booking-filter-tab" data-filter="package">🌴 Packages</button>
+                </div>
+
+                <!-- Bookings List Container -->
+                <div class="my-bookings-list-container" id="my-bookings-list">
+                    <!-- Rendered dynamically from localStorage via booking.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-backdrop" id="ticket-modal" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
+        <div class="modal-dialog modal-dialog-ticket">
+            <div class="modal-header no-print">
+                <h2 id="ticket-modal-title">Official E-Ticket Confirmation</h2>
+                <div class="ticket-modal-header-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-print-ticket">
+                        🖨️ Print / Save PDF
+                    </button>
+                    <button type="button" class="btn-close-modal" id="close-ticket-modal"
+                        aria-label="Close dialog">&times;</button>
+                </div>
+            </div>
+
+            <div class="modal-body printable-ticket" id="ticket-content-body">
+                <!-- Ticket content populated via booking.js -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div class="modal-dialog modal-dialog-sm">
+            <div class="modal-header">
+                <div class="auth-tabs-toggle">
+                    <button type="button" class="auth-tab active" id="tab-login-btn">Sign In</button>
+                    <button type="button" class="auth-tab" id="tab-register-btn">Create Account</button>
+                </div>
+                <button type="button" class="btn-close-modal" id="close-auth-modal"
+                    aria-label="Close dialog">&times;</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- LOGIN FORM -->
+                <form id="login-form" class="auth-form" novalidate>
+                    <div class="form-error-msg hidden" id="login-error"></div>
+
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="alex@example.com"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••"
+                            required />
+                    </div>
+
+                    <div class="form-row-between">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="login-remember" checked />
+                            <span class="checkmark"></span>
+                            <span>Remember me</span>
+                        </label>
+                        <span class="text-hint">Demo: alex@example.com / Password123</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="register-form" class="auth-form hidden" novalidate>
+                    <div class="form-error-msg hidden" id="register-error"></div>
+
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="e.g. Maya Chen" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="maya@example.com"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" class="form-control"
+                            placeholder="At least 6 characters" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-confirm-password">Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" class="form-control"
+                            placeholder="Re-enter password" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="main-footer" role="contentinfo">
+        <div class="container footer-content-grid">
+            <div class="footer-col brand-col">
+                <a href="#" class="brand-logo footer-logo">
+                    <span class="logo-icon">✈️</span>
+                    <span class="logo-text">Wander<strong>Go</strong></span>
+                </a>
+                <p class="footer-desc">
+                    Your complete portal for flights, hotels, buses, and holiday packages. Engineered with modern
+                    vanilla web standards.
+                </p>
+                <p class="footer-copy">&copy; 2026 WanderGo Portal. Built for educational excellence.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Modules</h4>
+                <ul class="footer-links">
+                    <li><a href="#flights" onclick="App.switchTab('flights')">Flight Booking</a></li>
+                    <li><a href="#hotels" onclick="App.switchTab('hotels')">Hotel Reservations</a></li>
+                    <li><a href="#buses" onclick="App.switchTab('buses')">Bus Tickets</a></li>
+                    <li><a href="#packages" onclick="App.switchTab('packages')">Holiday Packages</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Student Learning</h4>
+                <ul class="footer-links">
+                    <li><a href="javascript:void(0)"
+                            onclick="App.showToast('Promo Code: STUDENT10 gives 10% discount on any booking!', 'info')">Student
+                            Discount Code</a></li>
+                    <li><a href="javascript:void(0)" onclick="BookingModule.openMyBookings()">View My Bookings</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Demo Credentials</h4>
+                <div class="demo-creds-box">
+                    <p><strong>Email:</strong> alex@example.com</p>
+                    <p><strong>Password:</strong> Password123</p>
+                    <p class="text-muted">Or create a new account anytime!</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+   
+</body>
+
+</html>
