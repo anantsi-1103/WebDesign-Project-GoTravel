@@ -1,0 +1,58 @@
+[
+  {
+    "id": "BS-101",
+    "operator": "Greenline Express",
+    "busType": "Multi-Axle Volvo AC Sleeper",
+    "from": "Delhi",
+    "to": "Jaipur",
+    "departureTime": "07:00",
+    "arrivalTime": "12:30",
+    "duration": "5h 30m",
+    "price": 18,
+    "rating": 4.6,
+    "seatsAvailable": 14,
+    "amenities": ["Charging Point", "Water Bottle", "Blanket", "Reading Light"]
+  },
+  {
+    "id": "BS-102",
+    "operator": "Royal Travels",
+    "busType": "Mercedes Benz AC Seater",
+    "from": "Delhi",
+    "to": "Jaipur",
+    "departureTime": "14:30",
+    "arrivalTime": "19:45",
+    "duration": "5h 15m",
+    "price": 14,
+    "rating": 4.4,
+    "seatsAvailable": 22,
+    "amenities": ["Air Conditioning", "USB Port", "Live Tracking"]
+  },
+  {
+    "id": "BS-201",
+    "operator": "InterCity Coastal",
+    "busType": "Scania Luxury AC Sleeper",
+    "from": "Mumbai",
+    "to": "Goa",
+    "departureTime": "20:00",
+    "arrivalTime": "08:00",
+    "duration": "12h 00m",
+    "price": 28,
+    "rating": 4.7,
+    "seatsAvailable": 8,
+    "amenities": ["Individual TV Screen", "Charging Point", "Snack Kit", "Blanket & Pillow"]
+  },
+  {
+    "id": "BS-301",
+    "operator": "National Highway Lines",
+    "busType": "Super Luxury AC Coach",
+    "from": "New York",
+    "to": "Boston",
+    "departureTime": "09:00",
+    "arrivalTime": "13:30",
+    "duration": "4h 30m",
+    "price": 35,
+    "rating": 4.5,
+    "seatsAvailable": 19,
+    "amenities": ["Free Wi-Fi", "Reclining Seats", "Power Outlets", "Restroom"]
+  }
+]
