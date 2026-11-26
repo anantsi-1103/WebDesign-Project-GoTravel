@@ -1,4 +1,6 @@
-/*
+/**
+ * date-utils.js - Simple Date Helpers
+ * 
  * Helper functions for formatting dates and calculating hotel night stays.
  */
 
@@ -37,6 +39,35 @@ const DateUtils = {
       month: "short",
       day: "numeric",
       year: "numeric"
+    });
+  },
+
+  // Checks if a date string is in the past (before today)
+  isPastDate(dateStr) {
+    if (!dateStr) return false;
+    return dateStr < this.getTodayString();
+  },
+
+  // Enforces that date inputs allow today and future dates only (no past dates)
+  enforceMinToday(inputElement) {
+    if (!inputElement) return;
+    const today = this.getTodayString();
+    inputElement.min = today;
+    if (!inputElement.value || inputElement.value < today) {
+      inputElement.value = today;
+    }
+    inputElement.addEventListener("change", () => {
+      if (inputElement.value && inputElement.value < today) {
+        inputElement.value = today;
+        if (typeof App !== "undefined" && App.showToast) {
+          App.showToast("Past dates are not allowed. Date set to today.", "warning");
+        }
+      }
+    });
+    inputElement.addEventListener("input", () => {
+      if (inputElement.value && inputElement.value < today) {
+        inputElement.value = today;
+      }
     });
   },
 

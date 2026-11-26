@@ -5,9 +5,9 @@
  */
 
 const STORAGE_KEYS = {
-  BOOKINGS: "wandergo_bookings",
-  USERS: "wandergo_users",
-  CURRENT_USER: "wandergo_active_user"
+  BOOKINGS: "gotravel_bookings",
+  USERS: "gotravel_users",
+  CURRENT_USER: "gotravel_active_user"
 };
 
 const StorageService = {
