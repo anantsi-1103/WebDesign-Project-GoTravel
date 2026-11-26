@@ -1,0 +1,399 @@
+/**
+ * ==============================================================================
+ * RESPONSIVE STYLES (css/responsive.css)
+ * ==============================================================================
+ * Module 1 Requirement: Responsive Layout
+ * Learning Objectives:
+ * - CSS3 Media Queries (@media)
+ * - Fluid layouts, viewport units, flexible grid wrapping
+ * - Mobile navigation drawer and touch-friendly controls
+ * ==============================================================================
+ */
+
+/* ==========================================================================
+   TABLET BREAKPOINT (<= 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  /* Search forms wrapping */
+  .flight-form {
+    grid-template-columns: 1fr auto 1fr 1fr;
+  }
+
+  .flight-form .form-group:nth-child(5),
+  .flight-form .form-group:nth-child(6),
+  .flight-form .form-action-group {
+    grid-column: span 2;
+  }
+
+  .hotel-form {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+
+  .hotel-form .form-group:nth-child(4),
+  .hotel-form .form-group:nth-child(5) {
+    grid-column: span 1;
+  }
+
+  .hotel-form .form-action-group {
+    grid-column: span 3;
+  }
+
+  .bus-form,
+  .package-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bus-form .form-action-group,
+  .package-form .form-action-group {
+    grid-column: span 2;
+  }
+
+  /* Highlights & Destinations */
+  .highlights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .destinations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Sidebar layout */
+  .search-layout-grid {
+    grid-template-columns: 240px 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Flight Card */
+  .flight-card-main {
+    grid-template-columns: 1.5fr 2fr 1.4fr;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  /* Hotel Card */
+  .hotel-card {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .hotel-card-body {
+    grid-template-columns: 1fr 190px;
+    gap: 1.1rem;
+    padding: 1.25rem;
+  }
+
+  .hotel-pricing-column {
+    padding-left: 1rem;
+    min-width: 170px;
+  }
+
+  .footer-content-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================================
+   MOBILE BREAKPOINT (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Mobile Navigation */
+  .mobile-toggle-btn {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xl);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+    gap: 1.25rem;
+    display: none;
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+  }
+
+  .nav-menu.mobile-open,
+  .nav-menu.active {
+    display: flex;
+    animation: slideDown 0.25s ease-out;
+  }
+
+  .mobile-toggle-btn.active .hamburger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(40deg);
+  }
+
+  .mobile-toggle-btn.active .hamburger-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-toggle-btn.active .hamburger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    padding: 0.75rem 1rem;
+    width: 100%;
+  }
+
+  .nav-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .nav-actions .btn,
+  .btn-nav-action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .user-profile-pill {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Hero adjustments */
+  .hero-section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  /* Search forms stack to 1 column */
+  .flight-form,
+  .hotel-form,
+  .bus-form,
+  .package-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .swap-btn-container {
+    justify-content: center;
+  }
+
+  .btn-swap-airports {
+    transform: rotate(90deg);
+  }
+  .btn-swap-airports:hover {
+    transform: rotate(270deg);
+  }
+
+  .flight-form .form-group,
+  .flight-form .form-action-group,
+  .hotel-form .form-group,
+  .hotel-form .form-action-group,
+  .bus-form .form-action-group,
+  .package-form .form-action-group {
+    grid-column: span 1 !important;
+  }
+
+  /* Module Results Layout */
+  .search-layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    position: static;
+  }
+
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .sort-control-wrap {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Flight Card Stacking */
+  .flight-card-main {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .flight-pricing {
+    border-left: none;
+    border-top: 1px dashed var(--border-color);
+    padding-left: 0;
+    padding-top: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price-box {
+    align-items: flex-start;
+  }
+
+  /* Hotel Card Stacking */
+  .hotel-card {
+    grid-template-columns: 1fr;
+  }
+
+  .hotel-image-wrapper {
+    min-height: 200px;
+    height: 200px;
+  }
+
+  .hotel-card-body {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .hotel-pricing-column {
+    border-left: none;
+    border-top: 1px dashed var(--border-color);
+    padding-left: 0;
+    padding-top: 1rem;
+    align-items: stretch;
+    text-align: left;
+    min-width: 0;
+  }
+
+  .hotel-price-box {
+    align-items: flex-start;
+  }
+
+  .price-night-wrap {
+    justify-content: flex-start;
+  }
+
+  .hotel-stay-total {
+    text-align: left;
+  }
+
+  .hotel-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .btn-book-hotel {
+    width: 100%;
+  }
+
+  /* Bus Card Stacking */
+  .bus-main-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bus-price-action {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 0.75rem;
+  }
+
+  /* Modals Layout */
+  .booking-modal-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-main-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ticket-price-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-content-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ==========================================================================
+   EXTRA SMALL MOBILE (<= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .highlights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .destinations-grid {
+    grid-template-columns: 1fr;
+  }
+
+   .swap-btn-container {
+    justify-content: center;
+  }
+
+  .portal-tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .col-span-2 {
+    grid-column: span 1;
+  }
+
+  .ticket-price-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .hotel-card-body {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .hotel-header {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .hotel-name {
+    font-size: 1.15rem;
+  }
+
+  .price-night-rate {
+    font-size: 1.35rem;
+  }
+}

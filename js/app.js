@@ -67,18 +67,24 @@ const App = {
 
   // Mobile menu toggle
   bindMobileNav() {
-    const toggle = document.getElementById("mobile-nav-toggle");
-    const menu = document.getElementById("main-nav-menu");
+    const toggle = document.getElementById("mobile-menu-toggle") || document.getElementById("mobile-nav-toggle");
+    const menu = document.getElementById("nav-links-list") || document.getElementById("main-nav-menu");
 
     if (toggle && menu) {
       toggle.addEventListener("click", () => {
-        menu.classList.toggle("active");
-        toggle.setAttribute("aria-expanded", menu.classList.contains("active"));
+        const isOpen = menu.classList.toggle("mobile-open");
+        menu.classList.toggle("active", isOpen);
+        toggle.classList.toggle("active", isOpen);
+        toggle.setAttribute("aria-expanded", isOpen);
       });
 
       // Close menu when a link is clicked
       menu.querySelectorAll(".nav-link").forEach((link) => {
-        link.addEventListener("click", () => menu.classList.remove("active"));
+        link.addEventListener("click", () => {
+          menu.classList.remove("mobile-open", "active");
+          toggle.classList.remove("active");
+          toggle.setAttribute("aria-expanded", "false");
+        });
       });
     }
   },

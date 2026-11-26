@@ -1,9 +1,4 @@
-/**
- * booking.js - Booking Management & Ticket System
- * 
- * Handles multi-passenger booking forms, promo code discounts,
- * saving bookings to localStorage, My Bookings dashboard, and e-ticket display.
- */
+
 
 const BookingModule = {
   currentBookingItem: null,
