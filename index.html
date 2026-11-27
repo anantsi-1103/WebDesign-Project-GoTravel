@@ -12,15 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
 
   <!-- CSS Stylesheets -->
-
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
 
-  <!-- ========================================================================= -->
-  <!-- NAVIGATION BAR (MODULE 1: HOMEPAGE) -->
-  <!-- ========================================================================= -->
   <header class="navbar-header" id="main-header">
     <div class="nav-container">
       <!-- Brand Logo -->
@@ -81,14 +77,19 @@
             <span class="user-name" id="nav-user-name">Alex</span>
             <button class="btn-logout" id="nav-logout-btn" title="Logout">Logout</button>
           </div>
+
+          <!-- Email-Authenticated Travel Wallet (Hidden when not logged in) -->
+          <button class="btn-wallet hidden" id="nav-user-wallet" title="Click to view GoTravel Wallet & Add Funds">
+            <span class="wallet-icon">💳</span>
+            <span class="wallet-label">Wallet:</span>
+            <span class="wallet-amount" id="nav-wallet-amount">₹5,000</span>
+          </button>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN CONTENT -->
-  <!-- ========================================================================= -->
+
   <main id="main-content">
 
     <!-- HERO SECTION WITH TABS AND SEARCH FORM -->
@@ -389,19 +390,10 @@
             <p>Compare cheapest & fastest routes effortlessly</p>
           </div>
         </div>
-        <div class="highlight-item">
-          <span class="h-icon">💰</span>
-          <div>
-            <h4>Best Price Guarantee</h4>
-            <p>Compare cheapest & fastest routes effortlessly</p>
-          </div>
-        </div>
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- MODULE 2: FLIGHT BOOKING RESULTS VIEW -->
-    <!-- ======================================================================= -->
+
     <section class="module-view-section active" id="section-view-flights" aria-label="Flight Search Results">
       <div class="container section-inner">
         
@@ -542,9 +534,7 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- MODULE 3: HOTEL BOOKING RESULTS VIEW -->
-    <!-- ======================================================================= -->
+
     <section class="module-view-section" id="section-view-hotels" aria-label="Hotel Search Results">
       <div class="container section-inner">
         
@@ -641,9 +631,6 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- BUS SEARCH RESULTS VIEW -->
-    <!-- ======================================================================= -->
     <section class="module-view-section" id="section-view-buses" aria-label="Bus Search Results">
       <div class="container section-inner">
         <div class="view-header">
@@ -677,9 +664,6 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- HOLIDAY PACKAGES RESULTS VIEW -->
-    <!-- ======================================================================= -->
     <section class="module-view-section" id="section-view-packages" aria-label="Holiday Packages Results">
       <div class="container section-inner">
         <div class="view-header">
@@ -695,9 +679,6 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- POPULAR DESTINATIONS SHOWCASE (HOMEPAGE MODULE 1) -->
-    <!-- ======================================================================= -->
     <section class="destinations-section">
       <div class="container">
         <div class="section-heading text-center">
@@ -748,9 +729,7 @@
 
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- MODULE 4: BOOKING MODAL (PASSENGER DETAILS & SUMMARY) -->
-  <!-- ========================================================================= -->
+
   <div class="modal-backdrop" id="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
     <div class="modal-dialog modal-dialog-lg">
       <div class="modal-header">
@@ -807,7 +786,7 @@
                   type="text"
                   id="promo-code-input"
                   class="form-control"
-                  placeholder="Try: STUDENT10 or GOTRAVEL"
+                  placeholder="Try: STUDENT10 or GoTravel"
                 />
                 <button type="button" class="btn btn-secondary" id="btn-apply-promo">Apply</button>
               </div>
@@ -844,9 +823,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- "MY BOOKINGS" HISTORY DRAWER/MODAL (MODULE 4) -->
-  <!-- ========================================================================= -->
   <div class="modal-backdrop" id="my-bookings-modal" role="dialog" aria-modal="true" aria-labelledby="my-bookings-modal-title">
     <div class="modal-dialog modal-dialog-md">
       <div class="modal-header">
@@ -872,9 +848,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- PRINTABLE E-TICKET / SUMMARY MODAL -->
-  <!-- ========================================================================= -->
+
   <div class="modal-backdrop" id="ticket-modal" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
     <div class="modal-dialog modal-dialog-ticket">
       <div class="modal-header no-print">
@@ -893,9 +867,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- AUTHENTICATION MODAL (LOGIN / REGISTER) (MODULE 1) -->
-  <!-- ========================================================================= -->
+
   <div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <div class="modal-dialog modal-dialog-sm">
       <div class="modal-header">
@@ -1002,15 +974,158 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- FOOTER -->
-  <!-- ========================================================================= -->
+
+  <div class="modal-backdrop" id="edit-booking-modal" role="dialog" aria-modal="true" aria-labelledby="edit-booking-modal-title">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="edit-booking-modal-title">✏️ Edit Details & Reschedule Ticket</h2>
+          <div class="modal-subtitle-row">
+            <span>Booking Ref: <strong class="badge-ref" id="edit-modal-ref-badge">FL-XXXX</strong></span>
+            <span class="text-muted" id="edit-modal-item-title">Trip Title</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="close-edit-modal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body edit-modal-body">
+        <form id="edit-booking-form" novalidate>
+          
+          <!-- PART 1: PASSENGER & CONTACT DETAILS (FREE) -->
+          <div class="edit-section-card">
+            <div class="edit-section-header">
+              <h3>👤 Traveler & Primary Contact Information</h3>
+              <span class="badge-fee-tag badge-free">FREE (₹0 Fee)</span>
+            </div>
+            <p class="section-desc">Updating contact details or passenger names carries no charge.</p>
+
+            <fieldset class="form-section-fieldset">
+              <legend>Primary Contact Information</legend>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="edit-contact-name">Primary Contact Name *</label>
+                  <input type="text" id="edit-contact-name" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="edit-contact-email">Email Address *</label>
+                  <input type="email" id="edit-contact-email" class="form-control" required />
+                </div>
+                <div class="form-group col-span-2">
+                  <label for="edit-contact-phone">Phone Number *</label>
+                  <input type="tel" id="edit-contact-phone" class="form-control" required />
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="edit-pax-wrapper">
+              <h4>Travelers Details</h4>
+              <div id="edit-dynamic-passengers" class="edit-passengers-list">
+                <!-- Dynamically populated via booking.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- PART 2: RESCHEDULE TRAVEL DATES (MINIMAL FEE) -->
+          <div class="edit-section-card">
+            <div class="edit-section-header">
+              <h3>📅 Reschedule Travel Schedule</h3>
+              <span class="badge-fee-tag badge-charge" id="edit-fee-amount">Minimal Fee Applies</span>
+            </div>
+            <p class="section-desc">Need to change dates? Select your new travel date below. Rescheduling fee is automatically debited from your email-linked wallet.</p>
+
+            <div class="date-reschedule-grid">
+              <div class="form-group">
+                <label>Current Travel Date</label>
+                <div class="orig-date-box" id="edit-orig-date-display">--</div>
+              </div>
+              <div class="form-group">
+                <label for="edit-departure-date">New Travel Date *</label>
+                <input type="date" id="edit-departure-date" class="form-control" required />
+              </div>
+              <div class="form-group hidden col-span-2" id="edit-hotel-dates-group">
+                <label for="edit-return-date">New Check-out Date (Hotels)</label>
+                <input type="date" id="edit-return-date" class="form-control" />
+              </div>
+            </div>
+
+            <div id="edit-reschedule-fee-notice" class="reschedule-fee-notice">
+              <!-- Dynamically populated with fee info -->
+            </div>
+
+            <div id="edit-wallet-balance-info" class="edit-wallet-card">
+              <!-- Dynamically populated with email wallet balance -->
+            </div>
+          </div>
+
+          <!-- Modal Actions -->
+          <div class="modal-form-actions">
+            <button type="button" class="btn btn-secondary" onclick="BookingModule.closeEditModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" id="btn-save-ticket-changes">
+              💾 Confirm & Save Changes
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-backdrop" id="wallet-modal" role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
+    <div class="modal-dialog modal-dialog-sm">
+      <div class="modal-header">
+        <div>
+          <h2 id="wallet-modal-title">💳 My Travel Wallet</h2>
+          <p class="modal-user-subtitle">Linked to: <strong id="wallet-user-email">alex@example.com</strong></p>
+        </div>
+        <button type="button" class="btn-close-modal" id="close-wallet-modal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body wallet-modal-body">
+        
+        <!-- Wallet Balance Card -->
+        <div class="wallet-balance-hero">
+          <span class="wallet-hero-label">Available Balance</span>
+          <div class="wallet-hero-amount" id="wallet-balance-display">₹5,000</div>
+          <span class="wallet-hero-status">✅ Authenticated & Active</span>
+        </div>
+
+        <!-- Add Money Section -->
+        <div class="wallet-topup-section">
+          <h4>Top-Up Wallet</h4>
+          <p class="text-hint">Instant credit for bookings, date rescheduling & travel fees.</p>
+          <div class="topup-quick-buttons">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-topup-quick" data-amount="500">+₹500</button>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-topup-quick" data-amount="1000">+₹1,000</button>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-topup-quick" data-amount="2000">+₹2,000</button>
+          </div>
+          <div class="topup-custom-row">
+            <input type="number" id="wallet-topup-custom-amount" class="form-control form-control-sm" placeholder="Custom amount (₹)" min="100" />
+            <button type="button" class="btn btn-primary btn-sm" id="btn-custom-topup">Add Funds</button>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="wallet-tx-section">
+          <h4>Transaction Activity</h4>
+          <div class="wallet-tx-list" id="wallet-tx-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
   <footer class="main-footer" role="contentinfo">
     <div class="container footer-content-grid">
       <div class="footer-col brand-col">
         <a href="#" class="brand-logo footer-logo">
           <span class="logo-icon">✈️</span>
-          <span class="logo-text">Go<strong>Travel</strong></span>
+          <span class="logo-text">GoTravel<strong></strong></span>
         </a>
         <p class="footer-desc">
           Your complete portal for flights, hotels, buses, and holiday packages. Engineered with modern vanilla web standards.
@@ -1050,9 +1165,8 @@
   <!-- TOAST CONTAINER -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- SCRIPT FILES: Modular Scripts (Default) -->
-  <!-- NOTE: If you prefer a single consolidated script, you can comment out the scripts below and use: <script src="js/main.js"></script> -->
-   <script src="js/data.js"></script>
+
+  <script src="js/data.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/date-utils.js"></script>
   <script src="js/auth.js"></script>
@@ -1061,6 +1175,6 @@
   <script src="js/bus-package.js"></script>
   <script src="js/booking.js"></script>
   <script src="js/app.js"></script>
-  <!-- <script src="js/main.js"></script> -->
+
 </body>
 </html>

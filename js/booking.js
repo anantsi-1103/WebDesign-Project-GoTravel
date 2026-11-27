@@ -26,12 +26,24 @@ const BookingModule = {
     this.ticketContent = document.getElementById("ticket-content-body");
     this.printTicketBtn = document.getElementById("btn-print-ticket");
 
+    // Edit & Reschedule Modal Elements
+    this.editModal = document.getElementById("edit-booking-modal");
+    this.closeEditBtn = document.getElementById("close-edit-modal");
+    this.editForm = document.getElementById("edit-booking-form");
+    this.editPaxContainer = document.getElementById("edit-dynamic-passengers");
+    this.editDateInput = document.getElementById("edit-departure-date");
+    this.editReturnDateInput = document.getElementById("edit-return-date");
+    this.editHotelDatesGroup = document.getElementById("edit-hotel-dates-group");
+    this.editFeeNoticeEl = document.getElementById("edit-reschedule-fee-notice");
+    this.editFeeAmountEl = document.getElementById("edit-fee-amount");
+    this.editWalletBalanceEl = document.getElementById("edit-wallet-balance-info");
+
     this.bindEvents();
     this.updateBookingsBadge();
   },
 
   bindEvents() {
-    // Close booking modal
+   // Close booking modal
     this.closeBtn?.addEventListener("click", () => this.closeBookingModal());
     this.modal?.addEventListener("click", (e) => {
       if (e.target === this.modal) this.closeBookingModal();
@@ -50,6 +62,7 @@ const BookingModule = {
       if (e.target === this.myBookingsModal) this.closeMyBookings();
     });
 
+  
     // My Bookings filter tabs
     document.querySelectorAll(".booking-filter-tab").forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -246,16 +259,15 @@ const BookingModule = {
           <span class="row-label">Taxes & Fees (10%)</span>
           <span class="row-value">₹${pricing.taxesAndFees}</span>
         </div>
-        ${
-          pricing.discount > 0
-            ? `
+        ${pricing.discount > 0
+        ? `
           <div class="summary-row discount-row">
             <span class="row-label">Promo (${pricing.promoCode})</span>
             <span class="row-value text-success">-₹${pricing.discount}</span>
           </div>
         `
-            : ""
-        }
+        : ""
+      }
         <hr class="summary-divider" />
         <div class="summary-row total-row">
           <span class="row-label">Grand Total</span>
@@ -458,11 +470,10 @@ const BookingModule = {
             <button class="btn btn-sm btn-outline btn-view-ticket" data-id="${b.id}">
               📄 View Ticket
             </button>
-            ${
-              !isCancelled
-                ? `<button class="btn btn-sm btn-danger-outline btn-cancel-booking" data-id="${b.id}">Cancel Booking</button>`
-                : `<span class="cancelled-note">Cancelled</span>`
-            }
+            ${!isCancelled
+            ? `<button class="btn btn-sm btn-danger-outline btn-cancel-booking" data-id="${b.id}">Cancel Booking</button>`
+            : `<span class="cancelled-note">Cancelled</span>`
+          }
           </div>
         </article>
       `;

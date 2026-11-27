@@ -1,18 +1,4 @@
-/**
- * ==============================================================================
- * RESPONSIVE STYLES (css/responsive.css)
- * ==============================================================================
- * Module 1 Requirement: Responsive Layout
- * Learning Objectives:
- * - CSS3 Media Queries (@media)
- * - Fluid layouts, viewport units, flexible grid wrapping
- * - Mobile navigation drawer and touch-friendly controls
- * ==============================================================================
- */
 
-/* ==========================================================================
-   TABLET BREAKPOINT (<= 1024px)
-   ========================================================================== */
 @media (max-width: 1024px) {
   .hero-title {
     font-size: 2.25rem;
@@ -52,7 +38,7 @@
     grid-column: span 2;
   }
 
-  /* Highlights & Destinations */
+
   .highlights-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -61,7 +47,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Sidebar layout */
+
   .search-layout-grid {
     grid-template-columns: 240px 1fr;
     gap: 1.25rem;
@@ -95,10 +81,7 @@
   }
 }
 
-/* ==========================================================================
-   MOBILE BREAKPOINT (<= 768px)
-   ========================================================================== */
-@media (max-width: 768px) {
+   @media (max-width: 768px) {
   /* Mobile Navigation */
   .mobile-toggle-btn {
     display: flex;
@@ -128,7 +111,7 @@
   }
 
   .mobile-toggle-btn.active .hamburger-bar:nth-child(1) {
-    transform: translateY(7px) rotate(40deg);
+    transform: translateY(7px) rotate(45deg);
   }
 
   .mobile-toggle-btn.active .hamburger-bar:nth-child(2) {
@@ -163,9 +146,14 @@
   }
 
   .nav-actions .btn,
-  .btn-nav-action {
+  .btn-nav-action,
+  .btn-wallet {
     width: 100%;
     justify-content: center;
+  }
+
+  .date-reschedule-grid {
+    grid-template-columns: 1fr;
   }
 
   .user-profile-pill {
@@ -195,7 +183,7 @@
   }
 
   .swap-btn-container {
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .btn-swap-airports {
@@ -336,10 +324,7 @@
   }
 }
 
-/* ==========================================================================
-   EXTRA SMALL MOBILE (<= 480px)
-   ========================================================================== */
-@media (max-width: 480px) {
+   @media (max-width: 480px) {
   .hero-title {
     font-size: 1.6rem;
   }
@@ -350,10 +335,6 @@
 
   .destinations-grid {
     grid-template-columns: 1fr;
-  }
-
-   .swap-btn-container {
-    justify-content: center;
   }
 
   .portal-tab-btn {
