@@ -16,7 +16,16 @@ const AuthModule = {
     this.navProfile = document.getElementById("nav-user-profile");
     this.navUserName = document.getElementById("nav-user-name");
     this.navLogoutBtn = document.getElementById("nav-logout-btn");
+    this.navUserWallet = document.getElementById("nav-user-wallet");
+    this.navWalletAmount = document.getElementById("nav-wallet-amount");
     this.closeBtn = document.getElementById("close-auth-modal");
+
+    // Wallet Modal Elements
+    this.walletModal = document.getElementById("wallet-modal");
+    this.closeWalletBtn = document.getElementById("close-wallet-modal");
+    this.walletEmailEl = document.getElementById("wallet-user-email");
+    this.walletBalanceEl = document.getElementById("wallet-balance-display");
+    this.walletTxListEl = document.getElementById("wallet-tx-list");
 
     this.bindEvents();
     this.checkCurrentSession();
@@ -60,7 +69,45 @@ const AuthModule = {
     if (this.navLogoutBtn) {
       this.navLogoutBtn.addEventListener("click", () => this.handleLogout());
     }
+
+    // Wallet modal toggle
+    if (this.navUserWallet) {
+      this.navUserWallet.addEventListener("click", () => this.openWalletModal());
+    }
+
+    if (this.closeWalletBtn) {
+      this.closeWalletBtn.addEventListener("click", () => this.closeWalletModal());
+    }
+
+    if (this.walletModal) {
+      this.walletModal.addEventListener("click", (e) => {
+        if (e.target === this.walletModal) this.closeWalletModal();
+      });
+    }
+
+    document.querySelectorAll(".btn-topup-quick").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const amt = Number(btn.dataset.amount);
+        this.addWalletFunds(amt);
+      });
+    });
+
+
+    const customTopupBtn = document.getElementById("btn-custom-topup");
+    if (customTopupBtn) {
+      customTopupBtn.addEventListener("click", () => {
+        const input = document.getElementById("wallet-topup-custom-amount");
+        const amt = Number(input?.value);
+        if (amt && amt > 0) {
+          this.addWalletFunds(amt);
+          if (input) input.value = "";
+        } else {
+          App.showToast("Please enter a valid top-up amount", "warning");
+        }
+      });
+    }
   },
+
 
   // Switch between Login and Register tabs
   switchTab(mode) {
@@ -127,12 +174,91 @@ const AuthModule = {
       if (this.navUserName) this.navUserName.textContent = user.fullName.split(" ")[0];
       this.navProfile.classList.remove("hidden");
       this.navAuthBtn.classList.add("hidden");
+      if (this.navUserWallet) {
+        this.navUserWallet.classList.remove("hidden");
+        this.updateWalletBadge();
+      }
     } else if (this.navProfile && this.navAuthBtn) {
       this.navProfile.classList.add("hidden");
       this.navAuthBtn.classList.remove("hidden");
+      if (this.navUserWallet) {
+        this.navUserWallet.classList.add("hidden");
+      }
     }
   },
 
+  updateWalletBadge() {
+    const user = StorageService.getCurrentUser();
+    if (!user || !this.navWalletAmount) return;
+
+    const wallet = StorageService.getWallet(user.email);
+    this.navWalletAmount.textContent = `₹${wallet.balance.toLocaleString("en-IN")}`;
+  },
+
+  openWalletModal() {
+    const user = StorageService.getCurrentUser();
+    if (!user) {
+      this.openModal("login", "Please sign in to view your travel wallet.");
+      return;
+    }
+
+    const wallet = StorageService.getWallet(user.email);
+
+    if (this.walletEmailEl) this.walletEmailEl.textContent = user.email;
+    if (this.walletBalanceEl) this.walletBalanceEl.textContent = `₹${wallet.balance.toLocaleString("en-IN")}`;
+
+    if (this.walletTxListEl) {
+      if (!wallet.transactions || wallet.transactions.length === 0) {
+        this.walletTxListEl.innerHTML = `<p class="text-muted">No transactions recorded yet.</p>`;
+      } else {
+        this.walletTxListEl.innerHTML = wallet.transactions
+          .slice(0, 10)
+          .map((tx) => {
+            const isCredit = tx.type === "Credit";
+            const dateStr = new Date(tx.date).toLocaleDateString("en-IN", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            return `
+              <div class="wallet-tx-item">
+                <div class="tx-left">
+                  <span class="tx-badge tx-${isCredit ? "credit" : "debit"}">${isCredit ? "+" : "-"}</span>
+                  <div>
+                    <div class="tx-desc">${tx.description}</div>
+                    <div class="tx-date">${dateStr}</div>
+                  </div>
+                </div>
+                <div class="tx-amount tx-${isCredit ? "credit" : "debit"}">
+                  ${isCredit ? "+" : "-"}₹${tx.amount.toLocaleString("en-IN")}
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+    }
+
+    this.walletModal?.classList.add("active");
+    document.body.style.overflow = "hidden";
+  },
+
+  closeWalletModal() {
+    this.walletModal?.classList.remove("active");
+    document.body.style.overflow = "";
+  },
+
+  // Add funds to wallet
+  addWalletFunds(amount) {
+    const user = StorageService.getCurrentUser();
+    if (!user) return;
+
+    StorageService.updateWallet(user.email, amount, "Credit", "User Top-up Credit");
+    this.updateWalletBadge();
+    this.openWalletModal(); // Refresh modal view
+    App.showToast(`₹${amount.toLocaleString("en-IN")} added to your wallet!`, "success");
+  },
   // Handle Login form
   handleLogin(e) {
     e.preventDefault();
@@ -233,6 +359,7 @@ const AuthModule = {
   // Handle Logout
   handleLogout() {
     sessionStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    this.closeWalletModal();
     this.checkCurrentSession();
     if (typeof BookingModule !== "undefined") {
       BookingModule.pendingBookingItem = null;

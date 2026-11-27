@@ -7,7 +7,8 @@
 const STORAGE_KEYS = {
   BOOKINGS: "gotravel_bookings",
   USERS: "gotravel_users",
-  CURRENT_USER: "gotravel_active_user"
+  CURRENT_USER: "gotravel_active_user",
+  WALLETS : "gotravel_wallets"
 };
 
 const StorageService = {
@@ -77,6 +78,80 @@ const StorageService = {
     this.set(STORAGE_KEYS.BOOKINGS, list);
     return true;
   },
+
+  updateBooking(bookingId, updateFields){
+    const list = this.getBookings()
+    let updateRecord = null
+    const updatedList = list.map((item)=>{
+      if(item.id === bookingId || item.referenceId === bookingId){
+        updateRecord = {...item, ...updateFields};
+        return updateRecord
+      }
+      return item
+    })
+
+    this.set(STORAGE_KEYS.BOOKINGS, updatedList)
+    return updateRecord
+  },
+
+  getWallets() {
+    return this.get(STORAGE_KEYS.WALLETS, {});
+  },
+
+  getWallet(email) {
+    if (!email) return { email: "", balance: 0, transactions: [] };
+    const wallets = this.getWallets();
+    const key = email.toLowerCase().trim();
+
+    if (!wallets[key]) {
+      wallets[key] = {
+        email: key,
+        balance: 5000,
+        transactions: [
+          {
+            id: "TX-INIT-" + Date.now(),
+            type: "Credit",
+            amount: 5000,
+            description: "Welcome Promotional Travel Credit",
+            date: new Date().toISOString()
+          }
+        ]
+      };
+      this.set(STORAGE_KEYS.WALLETS, wallets);
+    }
+    return wallets[key];
+  },
+
+  updateWallet(email, amount, type = "Debit", description = "Transaction"){
+    if(!email) return null
+
+    const wallets = this.getWallets()
+    const key = email.toLowerCase().trim()
+    const wallet = this.getWallet(key)
+
+
+    const numAmt = Math.max(0, Number(amount) || 0)
+    if(type === "Debit"){
+      wallet.balance = Math.max(0, wallet.balance - numAmt)
+    }
+    else{
+      wallet.balance += numAmt
+    }
+
+    wallet.transactions.unshift({
+      id: "TX-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      type,
+      amount: numAmt,
+      description,
+      date: new Date().toISOString()
+    })
+
+    wallets[key] = wallet;
+    this.set(STORAGE_KEYS.WALLETS, wallets)
+    return wallet
+  },
+
+
 
   // Get registered users with demo user default
   getRegisteredUsers() {

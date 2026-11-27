@@ -43,7 +43,7 @@ const BookingModule = {
   },
 
   bindEvents() {
-   // Close booking modal
+    // Close booking modal
     this.closeBtn?.addEventListener("click", () => this.closeBookingModal());
     this.modal?.addEventListener("click", (e) => {
       if (e.target === this.modal) this.closeBookingModal();
@@ -62,7 +62,7 @@ const BookingModule = {
       if (e.target === this.myBookingsModal) this.closeMyBookings();
     });
 
-  
+
     // My Bookings filter tabs
     document.querySelectorAll(".booking-filter-tab").forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -72,14 +72,31 @@ const BookingModule = {
       });
     });
 
-    // My Bookings item actions (View Ticket / Cancel)
+    // My Bookings item actions (View Ticket / Cancel/ Edit)
     this.myBookingsList?.addEventListener("click", (e) => {
       const viewBtn = e.target.closest(".btn-view-ticket");
       if (viewBtn) this.viewTicket(viewBtn.dataset.id);
 
       const cancelBtn = e.target.closest(".btn-cancel-booking");
       if (cancelBtn) this.handleCancelBooking(cancelBtn.dataset.id);
+
+      const editBtn = e.target.closest(".btn-edit-booking");
+      if (editBtn) this.openEditModal(editBtn.dataset.id);
+
+
     });
+
+    // Edit Modal
+    this.closeEditBtn?.addEventListener("click", () => this.closeEditModal());
+    this.editModal?.addEventListener("click", (e) => {
+      if (e.target === this.editModal) this.closeEditModal();
+    });
+
+    this.editForm?.addEventListener("submit", (e) => this.handleEditSubmit(e));
+    this.editDateInput?.addEventListener("change", () => this.updateEditFeePreview());
+    this.editReturnDateInput?.addEventListener("change", () => this.updateEditFeePreview());
+
+
 
     // Ticket modal
     this.closeTicketBtn?.addEventListener("click", () => this.closeTicketModal());
@@ -468,10 +485,15 @@ const BookingModule = {
 
           <div class="bcard-actions">
             <button class="btn btn-sm btn-outline btn-view-ticket" data-id="${b.id}">
-              📄 View Ticket
+               View Ticket
             </button>
             ${!isCancelled
-            ? `<button class="btn btn-sm btn-danger-outline btn-cancel-booking" data-id="${b.id}">Cancel Booking</button>`
+            ? `
+             <button class="btn btn-sm btn-outline-primary btn-edit-booking" data-id="${b.id}">
+                     Edit / Reschedule
+                  </button>
+            
+            <button class="btn btn-sm btn-danger-outline btn-cancel-booking" data-id="${b.id}">Cancel Booking</button>`
             : `<span class="cancelled-note">Cancelled</span>`
           }
           </div>
@@ -512,12 +534,12 @@ const BookingModule = {
     const { item, pricing, passengers, primaryContact } = booking;
 
     const titleMap = {
-      flight: "✈️ WanderGo Flight E-Ticket",
-      hotel: "🏨 WanderGo Hotel Reservation Voucher",
-      bus: "🚌 WanderGo Intercity Bus Ticket",
-      package: "🌴 WanderGo Holiday Package Voucher"
+      flight: "✈️ GoTravel Flight E-Ticket",
+      hotel: "🏨 GoTravel Hotel Reservation Voucher",
+      bus: "🚌 GoTravel Intercity Bus Ticket",
+      package: "🌴 GoTravel Holiday Package Voucher"
     };
-    const ticketTitle = titleMap[item.type] || "✈️ WanderGo Travel E-Ticket";
+    const ticketTitle = titleMap[item.type] || "✈️ GoTravel Travel E-Ticket";
 
     let tripSpecificRows = "";
     if (item.type === "hotel") {
@@ -588,6 +610,7 @@ const BookingModule = {
           <div>Base Fare: <strong>₹${pricing.baseFare}</strong></div>
           <div>Taxes & Fees: <strong>₹${pricing.taxesAndFees}</strong></div>
           <div>Discount: <strong>-₹${pricing.discount || 0}</strong></div>
+            ${pricing.rescheduleFee ? `<div style="color: #b45309; font-weight: 700;">Reschedule Fee: <strong>+₹${pricing.rescheduleFee}</strong></div>` : ""}
           <div class="ticket-total">Grand Total: <strong>₹${pricing.grandTotal}</strong></div>
         </div>
       </div>
@@ -600,5 +623,275 @@ const BookingModule = {
   closeTicketModal() {
     this.ticketModal?.classList.remove("active");
     document.body.style.overflow = "";
+  },
+
+
+
+  // Calculate minimal rescheduling fee based on travel category
+  calculateRescheduleFee(item) {
+    if (!item) return 500;
+
+    switch (item.type) {
+      case "flight":
+        return 500 * (Number(item.passengersCount) || 1);
+      case "hotel":
+        return 400 * (Number(item.totalUnits) || 1);
+      case "bus":
+        return 200 * (Number(item.passengersCount) || 1);
+      case "package":
+        return 800;
+      default:
+        return 500;
+    }
+  },
+
+  openEditModal(bookingId) {
+    const currentUser = StorageService.getCurrentUser();
+    if (!currentUser) {
+      AuthModule.openModal("login", "Please sign in to edit or reschedule your reservation.");
+      App.showToast("Please sign in to edit your booking.", "warning");
+      return;
+    }
+
+    const booking = StorageService.getBookings().find((b) => b.id === bookingId || b.referenceId === bookingId);
+    if (!booking || !this.editModal) return;
+
+    this.editingBooking = booking;
+
+    const refBadge = document.getElementById("edit-modal-ref-badge");
+    if (refBadge) refBadge.textContent = booking.referenceId;
+    const itemTitle = document.getElementById("edit-modal-item-title");
+    if (itemTitle) itemTitle.textContent = `${booking.item.title} (${booking.item.type.toUpperCase()})`;
+
+    const nameInput = document.getElementById("edit-contact-name");
+    const emailInput = document.getElementById("edit-contact-email");
+    const phoneInput = document.getElementById("edit-contact-phone");
+
+    if (nameInput) nameInput.value = booking.primaryContact?.name || "";
+    if (emailInput) emailInput.value = booking.primaryContact?.email || currentUser.email;
+    if (phoneInput) phoneInput.value = booking.primaryContact?.phone || "";
+
+    if (this.editPaxContainer) {
+      this.editPaxContainer.innerHTML = (booking.passengers || []).map((pax, i) => `
+        <div class="edit-pax-card">
+          <h5>${booking.item.type === "hotel" ? "Guest" : "Traveler"} #${i + 1}</h5>
+          <div class="form-grid">
+            <div class="form-group col-span-2">
+              <label for="edit-pax-name-${i}">Full Name *</label>
+              <input type="text" id="edit-pax-name-${i}" class="form-control" value="${pax.name || ""}" required />
+            </div>
+            <div class="form-group">
+              <label for="edit-pax-age-${i}">Age *</label>
+              <input type="number" id="edit-pax-age-${i}" class="form-control" min="1" max="120" value="${pax.age || ""}" required />
+            </div>
+            <div class="form-group">
+              <label for="edit-pax-gender-${i}">Gender</label>
+              <select id="edit-pax-gender-${i}" class="form-control">
+                <option value="Male" ${pax.gender === "Male" ? "selected" : ""}>Male</option>
+                <option value="Female" ${pax.gender === "Female" ? "selected" : ""}>Female</option>
+                <option value="Other" ${pax.gender === "Other" ? "selected" : ""}>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    const origDateDisplay = document.getElementById("edit-orig-date-display");
+    if (origDateDisplay) origDateDisplay.textContent = DateUtils.formatFriendlyDate(booking.item.departureDate);
+
+    const todayStr = DateUtils.getTodayString();
+    if (this.editDateInput) {
+      this.editDateInput.value = booking.item.departureDate || "";
+      this.editDateInput.min = todayStr;
+    }
+
+    if (this.editHotelDatesGroup) {
+      if (booking.item.type === "hotel") {
+        this.editHotelDatesGroup.classList.remove("hidden");
+        if (this.editReturnDateInput) {
+          this.editReturnDateInput.value = booking.item.returnDate || "";
+          this.editReturnDateInput.min = todayStr;
+        }
+      } else {
+        this.editHotelDatesGroup.classList.add("hidden");
+      }
+    }
+
+    this.updateEditFeePreview();
+
+    this.editModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  },
+
+  closeEditModal() {
+    this.editModal?.classList.remove("active");
+    document.body.style.overflow = "";
+    this.editingBooking = null;
+  },
+
+  updateEditFeePreview() {
+    if (!this.editingBooking) return;
+
+    const origDate = this.editingBooking.item.departureDate;
+    const newDate = this.editDateInput?.value;
+    const origReturnDate = this.editingBooking.item.returnDate;
+    const newReturnDate = this.editReturnDateInput?.value;
+
+    const dateChanged = newDate && newDate !== origDate;
+    const returnChanged = this.editingBooking.item.type === "hotel" && newReturnDate && newReturnDate !== origReturnDate;
+    const isRescheduled = dateChanged || returnChanged;
+
+    const fee = isRescheduled ? this.calculateRescheduleFee(this.editingBooking.item) : 0;
+
+    if (this.editFeeAmountEl) {
+      this.editFeeAmountEl.textContent = fee === 0 ? "₹0 (Free)" : `+₹${fee.toLocaleString("en-IN")}`;
+      this.editFeeAmountEl.className = fee === 0 ? "fee-badge fee-free" : "fee-badge fee-paid";
+    }
+
+    if (this.editFeeNoticeEl) {
+      if (fee === 0) {
+        this.editFeeNoticeEl.innerHTML = `
+          <div class="alert-info-box">
+             <strong>Passenger & Contact Details Edit:</strong> 100% Free of charge.
+          </div>
+        `;
+      } else {
+        this.editFeeNoticeEl.innerHTML = `
+          <div class="alert-warning-box">
+             <strong>Travel Date Change:</strong> Rescheduling fee of <strong>₹${fee.toLocaleString("en-IN")}</strong> will be automatically charged to your authenticated wallet.
+          </div>
+        `;
+      }
+    }
+
+    const currentUser = StorageService.getCurrentUser();
+    if (currentUser && this.editWalletBalanceEl) {
+      const wallet = StorageService.getWallet(currentUser.email);
+      const hasEnough = wallet.balance >= fee;
+      this.editWalletBalanceEl.innerHTML = `
+        <div class="wallet-status-row">
+          <span>💳 Email Wallet: <strong>${currentUser.email}</strong></span>
+          <span>Balance: <strong class="${hasEnough ? "text-success" : "text-danger"}">₹${wallet.balance.toLocaleString("en-IN")}</strong></span>
+        </div>
+        ${!hasEnough ? `<div class="badge-insufficient">⚠️ Insufficient Balance for Date Change! Please top up your wallet.</div>` : ""}
+      `;
+    }
+  },
+
+  handleEditSubmit(e) {
+    e.preventDefault();
+
+    if (!this.editingBooking) return;
+
+    const currentUser = StorageService.getCurrentUser();
+    if (!currentUser) {
+      AuthModule.openModal("login", "Please sign in to update your reservation.");
+      return;
+    }
+
+    const contactName = document.getElementById("edit-contact-name")?.value.trim();
+    const contactEmail = document.getElementById("edit-contact-email")?.value.trim();
+    const contactPhone = document.getElementById("edit-contact-phone")?.value.trim();
+
+    if (!contactName || contactName.length < 2) {
+      App.showToast("Please enter a valid contact name.", "error");
+      return;
+    }
+    if (!contactEmail || !contactEmail.includes("@")) {
+      App.showToast("Please enter a valid email address.", "error");
+      return;
+    }
+    if (!contactPhone || contactPhone.length < 7) {
+      App.showToast("Please enter a valid phone number.", "error");
+      return;
+    }
+
+    const updatePassengers = [];
+    const paxCount = this.editingBooking.passengers?.length || 1;
+    for (let i = 0; i < paxCount; i++) {
+      const name = document.getElementById(`edit-pax-name-${i}`)?.value.trim();
+      const age = Number(document.getElementById(`edit-pax-age-${i}`)?.value);
+      const gender = document.getElementById(`edit-pax-gender-${i}`)?.value || "Other";
+
+      if (!name || name.length < 2) {
+        App.showToast(`Please enter a valid name for Traveler #${i + 1}`, "error");
+        return;
+      }
+      if (!age || age < 1 || age > 120) {
+        App.showToast(`Please enter a valid age for Traveler #${i + 1}`, "error");
+        return;
+      }
+
+      updatePassengers.push({ name, age, gender });
+    }
+
+    // Check rescheduling the date
+    const origDate = this.editingBooking.item.departureDate;
+    const newDate = this.editDateInput?.value;
+    const origReturnDate = this.editingBooking.item.returnDate;
+    const newReturnDate = this.editReturnDateInput?.value;
+
+    const dateChanged = newDate && newDate !== origDate;
+    const returnChanged = this.editingBooking.item.type === "hotel" && newReturnDate && newReturnDate !== origReturnDate;
+    const isRescheduled = dateChanged || returnChanged;
+
+    let fee = 0;
+    if (isRescheduled) {
+      fee = this.calculateRescheduleFee(this.editingBooking.item);
+      const wallet = StorageService.getWallet(currentUser.email);
+
+      if (wallet.balance < fee) {
+        App.showToast(`Insufficient wallet balance (₹${wallet.balance}) for rescheduling fee (₹${fee}). Please top up your wallet.`, "error");
+        return;
+      }
+
+      // Deduct rescheduling fee
+      StorageService.updateWallet(
+        currentUser.email,
+        fee,
+        "Debit",
+        `Rescheduling Fee for ${this.editingBooking.referenceId} (${origDate} ➔ ${newDate})`
+      );
+      if (typeof AuthModule !== "undefined") {
+        AuthModule.updateWalletBadge();
+      }
+    }
+
+    // Update booking object
+    const updatedItem = { ...this.editingBooking.item };
+    if (dateChanged) updatedItem.departureDate = newDate;
+    if (returnChanged) updatedItem.returnDate = newReturnDate;
+
+    const updatedPricing = { ...this.editingBooking.pricing };
+    if (isRescheduled) {
+      updatedPricing.rescheduleFee = (updatedPricing.rescheduleFee || 0) + fee;
+      updatedPricing.grandTotal += fee;
+    }
+
+    const updatedBooking = StorageService.updateBooking(this.editingBooking.id, {
+      primaryContact: {
+        name: contactName,
+        email: contactEmail,
+        phone: contactPhone
+      },
+      passengers: updatePassengers,
+      item: updatedItem,
+      pricing: updatedPricing,
+      status: isRescheduled ? "Rescheduled" : this.editingBooking.status,
+      lastModifiedAt: new Date().toISOString()
+    });
+
+    const savedId = this.editingBooking.id;
+    this.closeEditModal();
+    this.renderMyBookingsList();
+
+    if (isRescheduled) {
+      App.showToast(`Trip rescheduled to ${newDate}! Reschedule fee of ₹${fee} charged to your wallet.`, "success");
+    } else {
+      App.showToast("Passenger details updated successfully (No extra charge)!", "success");
+    }
+
+    this.viewTicket(savedId);
   }
 };
